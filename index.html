@@ -1,34 +1,61 @@
+```html
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Blog</title>
+    <title>Mi Rincón Técnico</title>
     
-    <!-- Cargando la fuente moderna 'Inter' desde Google Fonts -->
+    <!-- Cargando la fuente Inter para un look moderno -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Cargando Tailwind CSS para los estilos rápidos y responsivos -->
+    <!-- Cargando Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <style>
-        /* Aplicamos la fuente Inter a todo el documento */
+        /* Aplicamos la fuente a todo el body */
         body {
             font-family: 'Inter', sans-serif;
         }
     </style>
 </head>
-<!-- bg-slate-50: fondo gris muy claro. min-h-screen: ocupa toda la pantalla. flex: centra el contenido -->
-<body class="bg-slate-50 min-h-screen flex items-center justify-center p-6">
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
 
-    <!-- Tarjeta principal centrada con sombra, bordes redondeados y un acento verde arriba -->
-    <main class="bg-white p-8 md:p-12 rounded-2xl shadow-lg max-w-lg w-full border-t-4 border-emerald-500 text-center transition-all duration-300 hover:shadow-xl">
+    <!-- Tarjeta principal blanca con borde verde y sombra -->
+    <main class="bg-white p-8 md:p-10 rounded-2xl shadow-lg max-w-lg w-full border-t-4 border-emerald-500 text-center transition-all hover:shadow-xl">
         
-        <!-- Pequeña etiqueta estilo "pill" para darle un toque profesional -->
-        <div class="inline-block bg-emerald-50 text-emerald-700 px-4 py-1.5 rounded-full text-sm font-semibold tracking-wide mb-6">
+        <!-- Etiqueta superior (Badge) -->
+        <div class="inline-block bg-emerald-100 text-emerald-800 px-4 py-1.5 rounded-full text-sm font-semibold tracking-wide mb-5">
             En construcción 🚀
         </div>
 
         <!-- Título principal -->
+        <h1 class="text-2xl md:text-3xl font-bold text-slate-800 mb-4 leading-tight">
+            ¡Hola! Bienvenido a mi rincón técnico.
+        </h1>
+        
+        <!-- Párrafo descriptivo -->
+        <p class="text-slate-600 text-base md:text-lg leading-relaxed mb-8">
+            Este es el espacio donde compartiré mis proyectos de ingeniería, desde diseño de filtros digitales y sistemas de control hasta notas sobre máquinas eléctricas. Pronto publicaré mis primeros artículos y herramientas interactivas.
+        </p>
+
+        <!-- Contenedor de las etiquetas (Tags) -->
+        <div class="flex flex-wrap justify-center gap-2 md:gap-3">
+            <span class="bg-slate-100 text-slate-600 px-3 py-1.5 rounded-md text-xs md:text-sm font-medium border border-slate-200">
+                Microcontroladores
+            </span>
+            <span class="bg-slate-100 text-slate-600 px-3 py-1.5 rounded-md text-xs md:text-sm font-medium border border-slate-200">
+                Sistemas de Control
+            </span>
+            <span class="bg-slate-100 text-slate-600 px-3 py-1.5 rounded-md text-xs md:text-sm font-medium border border-slate-200">
+                Electrónica
+            </span>
+        </div>
+
+    </main>
+
+</body>
+</html>
+```

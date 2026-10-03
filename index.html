@@ -51,7 +51,37 @@
             <!-- Grilla: 1 columna en celulares, 2 en pantallas medianas/grandes -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 
-                <!-- Tarjeta 1: Filtros ESP32 -->
+                <!-- Tarjeta 1: Calculadora de Error -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md hover:border-emerald-200 transition-all group flex flex-col">
+                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-emerald-100 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Calculadora de Error en Estado Estable</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4 flex-grow">
+                        Herramienta interactiva para calcular el error en estado estable (ess) basado en el tipo de sistema y la entrada.
+                    </p>
+                    <a href="calculadora-error.html" class="mt-auto w-full flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-2.5 px-4 rounded-lg transition-colors text-sm shadow-sm">
+                        Abrir Calculadora
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </a>
+                </div>
+
+                <!-- Tarjeta 2: Graficador LGR (NUEVA) -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md hover:border-emerald-200 transition-all group flex flex-col">
+                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-emerald-100 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Graficador de Lugar de Raíces (LGR)</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4 flex-grow">
+                        Herramienta interactiva para calcular y graficar el lugar geométrico de las raíces en el plano S a partir de polos y ceros.
+                    </p>
+                    <a href="lugar-raices.html" class="mt-auto w-full flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-2.5 px-4 rounded-lg transition-colors text-sm shadow-sm">
+                        Abrir Graficador LGR
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </a>
+                </div>
+
+                <!-- Tarjeta 3: Filtros ESP32 -->
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md hover:border-emerald-200 transition-all group flex flex-col">
                     <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-emerald-100 transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
@@ -62,23 +92,7 @@
                     </p>
                 </div>
 
-                <!-- Tarjeta 2: Calculadora (¡Con botón funcional!) -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md hover:border-emerald-200 transition-all group flex flex-col">
-                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-emerald-100 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-900 mb-2">Calculadora de Error</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed mb-4 flex-grow">
-                        Herramienta interactiva para calcular el error en estado estable (ess) basado en el tipo de sistema y la entrada.
-                    </p>
-                    <!-- Este enlace es la magia que conecta ambos archivos -->
-                    <a href="calculadora-error.html" class="mt-auto w-full flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-2.5 px-4 rounded-lg transition-colors text-sm shadow-sm">
-                        Abrir Calculadora
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
-                    </a>
-                </div>
-
-                <!-- Tarjeta 3: Máquinas Eléctricas -->
+                <!-- Tarjeta 4: Máquinas Eléctricas -->
                 <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md hover:border-emerald-200 transition-all group flex flex-col">
                     <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-emerald-100 transition-colors">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
@@ -86,17 +100,6 @@
                     <h3 class="text-lg font-bold text-slate-900 mb-2">Máquinas Eléctricas</h3>
                     <p class="text-slate-600 text-sm leading-relaxed mb-4 flex-grow">
                         Análisis detallado sobre las condiciones de arranque de motores, dinámicas de torque y ensayos de vacío/cortocircuito.
-                    </p>
-                </div>
-
-                <!-- Tarjeta 4: Filtros Activos -->
-                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md hover:border-emerald-200 transition-all group flex flex-col">
-                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-emerald-100 transition-colors">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                    </div>
-                    <h3 class="text-lg font-bold text-slate-900 mb-2">Filtros Activos Analógicos</h3>
-                    <p class="text-slate-600 text-sm leading-relaxed mb-4 flex-grow">
-                        Guía práctica y cálculos paso a paso para el diseño de filtros analógicos pasa-altos y pasa-bajos de primer orden.
                     </p>
                 </div>
                 

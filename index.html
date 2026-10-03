@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora de Error en Estado Estable</title>
+    <title>Mi Rincón Técnico - Ingeniería</title>
     
-    <!-- Cargando fuente Inter -->
+    <!-- Cargando la fuente Inter para un look limpio y profesional -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -16,247 +16,105 @@
     
     <style>
         body { font-family: 'Inter', sans-serif; }
-        
-        /* Clases auxiliares para crear fracciones matemáticas visualmente */
-        .math-fraction {
-            display: inline-flex;
-            flex-direction: column;
-            align-items: center;
-            vertical-align: middle;
-            margin: 0 0.25rem;
-        }
-        .math-numerator {
-            border-bottom: 2px solid currentColor;
-            padding: 0 0.25rem;
-            line-height: 1.2;
-        }
-        .math-denominator {
-            padding: 0 0.25rem;
-            line-height: 1.2;
-        }
     </style>
 </head>
 
-<body class="bg-slate-50 min-h-screen text-slate-800 antialiased py-8 px-4 sm:py-12 flex flex-col items-center">
+<body class="bg-slate-50 min-h-screen text-slate-800 antialiased py-12 px-4 flex flex-col items-center">
 
-    <div class="max-w-4xl w-full mx-auto flex flex-col gap-8">
+    <!-- Contenedor central ajustado para mejor legibilidad -->
+    <div class="max-w-3xl w-full mx-auto flex flex-col gap-12">
         
-        <!-- Tarjeta de Introducción -->
-        <header class="bg-white p-8 md:p-10 rounded-2xl shadow-sm border-t-4 border-emerald-500">
-            <div class="flex items-center gap-3 mb-4">
-                <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                </div>
-                <h1 class="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">
-                    Calculadora de Error en Estado Estable
-                </h1>
+        <!-- Tarjeta Principal (Presentación) -->
+        <header class="bg-white p-8 md:p-12 rounded-2xl shadow-sm border-t-4 border-emerald-500 text-center relative">
+            <div class="inline-block bg-emerald-100 text-emerald-800 px-4 py-1.5 rounded-full text-sm font-semibold tracking-wide mb-6">
+                En construcción 🚀
             </div>
+
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4 tracking-tight">
+                ¡Hola! Bienvenido a mi rincón técnico.
+            </h1>
             
-            <p class="text-slate-600 text-lg leading-relaxed">
-                El <strong>error en estado estable (e<sub>ss</sub>)</strong> es la diferencia entre la entrada y la salida de un sistema de control cuando el tiempo tiende a infinito. Su valor depende del <em>tipo de sistema</em> (cantidad de integradores o polos en el origen) y de la <em>señal de entrada</em> aplicada (escalón, rampa o parábola).
+            <p class="text-slate-600 text-lg leading-relaxed mb-8 max-w-2xl mx-auto">
+                Este es el espacio donde compartiré mis proyectos de ingeniería, desde diseño de filtros digitales y sistemas de control hasta notas sobre máquinas eléctricas. Pronto publicaré mis primeros artículos y herramientas interactivas.
             </p>
+
+            <div class="flex flex-wrap justify-center gap-3">
+                <span class="bg-slate-100 text-slate-700 px-4 py-1.5 rounded-full text-sm font-medium">Microcontroladores</span>
+                <span class="bg-slate-100 text-slate-700 px-4 py-1.5 rounded-full text-sm font-medium">Sistemas de Control</span>
+                <span class="bg-slate-100 text-slate-700 px-4 py-1.5 rounded-full text-sm font-medium">Electrónica</span>
+            </div>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <section>
+            <h2 class="text-2xl font-bold text-slate-800 mb-6 text-center tracking-tight">Proyectos y Herramientas</h2>
             
-            <!-- Columna Izquierda: Formulario (Ocupa 7/12 en desktop) -->
-            <div class="lg:col-span-7 flex flex-col gap-6">
-                <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100">
-                    <h2 class="text-xl font-bold text-slate-800 mb-6 border-b border-slate-100 pb-4">Parámetros del Sistema</h2>
-                    
-                    <form id="calculator-form" class="space-y-6">
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Tipo de Sistema -->
-                            <div class="space-y-2">
-                                <label class="block text-sm font-semibold text-slate-700">Tipo de Sistema</label>
-                                <select id="sys-type" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block p-3 transition-colors outline-none cursor-pointer">
-                                    <option value="0">Tipo 0 (Sin integradores)</option>
-                                    <option value="1">Tipo 1 (1 polo en el origen)</option>
-                                    <option value="2">Tipo 2 (2 polos en el origen)</option>
-                                </select>
-                            </div>
-
-                            <!-- Tipo de Entrada -->
-                            <div class="space-y-2">
-                                <label class="block text-sm font-semibold text-slate-700">Señal de Entrada (R(s))</label>
-                                <select id="input-type" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block p-3 transition-colors outline-none cursor-pointer">
-                                    <option value="step">Escalón (A/s)</option>
-                                    <option value="ramp">Rampa (A/s²)</option>
-                                    <option value="parabola">Parábola (A/s³)</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Amplitud -->
-                            <div class="space-y-2">
-                                <label class="block text-sm font-semibold text-slate-700">Amplitud de Entrada (A)</label>
-                                <input type="number" id="amplitude" value="1" step="any" required
-                                    class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block p-3 transition-colors outline-none">
-                            </div>
-
-                            <!-- Constante de Error (Dinámica) -->
-                            <div class="space-y-2">
-                                <label id="constant-label" class="block text-sm font-semibold text-slate-700">Constante de Posición (Kp)</label>
-                                <input type="number" id="error-constant" value="10" step="any" required
-                                    class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block p-3 transition-colors outline-none">
-                            </div>
-                        </div>
-
-                        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-lg text-sm px-5 py-4 transition-colors shadow-sm mt-4 flex justify-center items-center gap-2">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                            Calcular Error (e<sub>ss</sub>)
-                        </button>
-                    </form>
-                </div>
-            </div>
-
-            <div class="lg:col-span-5 flex flex-col gap-6">
+            <!-- Grilla: 1 columna en celulares, 2 en pantallas medianas/grandes -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 
-                <!-- Tarjeta de Resultado Dinámico -->
-                <div class="bg-slate-900 rounded-2xl shadow-sm border border-slate-800 text-white p-6 md:p-8 flex flex-col justify-center min-h-[250px] relative overflow-hidden">
-                    <!-- Patrón de fondo sutil decorativo -->
-                    <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#10b981 1px, transparent 1px); background-size: 16px 16px;"></div>
-                    
-                    <div class="relative z-10 flex flex-col items-center text-center w-full">
-                        <h3 class="text-slate-400 font-medium text-sm tracking-widest uppercase mb-6">Resultado del Análisis</h3>
-                        
-                        <div id="result-display" class="w-full">
-                            <p class="text-slate-300 italic mb-2">Ingresá los valores y presioná calcular.</p>
-                        </div>
+                <!-- Tarjeta 1: Filtros ESP32 -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md hover:border-emerald-200 transition-all group flex flex-col">
+                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-emerald-100 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"></path></svg>
                     </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Filtro Pasabanda ESP32</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4 flex-grow">
+                        Desarrollo de un filtro digital de octavo orden utilizando estructuras Biquad y tareas en tiempo real con FreeRTOS.
+                    </p>
                 </div>
 
-                <div class="bg-emerald-50 rounded-xl p-6 border border-emerald-100">
-                    <h4 class="text-sm font-bold text-emerald-800 uppercase tracking-wide mb-3 flex items-center gap-2">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                        Referencia Rápida
-                    </h4>
-                    <ul class="text-sm text-emerald-700 space-y-2">
-                        <li><strong>Tipo 0:</strong> Finito para Escalón (K<sub>p</sub>). Infinito para Rampa y Parábola.</li>
-                        <li><strong>Tipo 1:</strong> Cero para Escalón. Finito para Rampa (K<sub>v</sub>). Infinito para Parábola.</li>
-                        <li><strong>Tipo 2:</strong> Cero para Escalón y Rampa. Finito para Parábola (K<sub>a</sub>).</li>
-                    </ul>
+                <!-- Tarjeta 2: Calculadora (¡Con botón funcional!) -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md hover:border-emerald-200 transition-all group flex flex-col">
+                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-emerald-100 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Calculadora de Error</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4 flex-grow">
+                        Herramienta interactiva para calcular el error en estado estable (ess) basado en el tipo de sistema y la entrada.
+                    </p>
+                    <!-- Este enlace es la magia que conecta ambos archivos -->
+                    <a href="calculadora-error.html" class="mt-auto w-full flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-2.5 px-4 rounded-lg transition-colors text-sm shadow-sm">
+                        Abrir Calculadora
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </a>
                 </div>
 
+                <!-- Tarjeta 3: Máquinas Eléctricas -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md hover:border-emerald-200 transition-all group flex flex-col">
+                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-emerald-100 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Máquinas Eléctricas</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4 flex-grow">
+                        Análisis detallado sobre las condiciones de arranque de motores, dinámicas de torque y ensayos de vacío/cortocircuito.
+                    </p>
+                </div>
+
+                <!-- Tarjeta 4: Filtros Activos -->
+                <div class="bg-white p-6 rounded-xl shadow-sm border border-slate-100 hover:shadow-md hover:border-emerald-200 transition-all group flex flex-col">
+                    <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center mb-4 group-hover:bg-emerald-100 transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-900 mb-2">Filtros Activos Analógicos</h3>
+                    <p class="text-slate-600 text-sm leading-relaxed mb-4 flex-grow">
+                        Guía práctica y cálculos paso a paso para el diseño de filtros analógicos pasa-altos y pasa-bajos de primer orden.
+                    </p>
+                </div>
+                
             </div>
-        </div>
+        </section>
+
+        <footer class="flex flex-col sm:flex-row justify-center gap-4 mt-4 pb-8">
+            <a href="https://github.com/gabyabejer" target="_blank" class="flex items-center justify-center gap-2 bg-slate-900 text-white px-8 py-3 rounded-xl font-medium hover:bg-slate-800 transition-colors shadow-sm">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.161 22 16.418 22 12c0-5.523-4.477-10-10-10z"></path></svg>
+                GitHub
+            </a>
+            <a href="mailto:tu-correo@ejemplo.com" class="flex items-center justify-center gap-2 bg-white text-slate-700 px-8 py-3 rounded-xl font-medium border border-slate-200 hover:bg-slate-50 hover:border-slate-300 transition-colors shadow-sm">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                Email
+            </a>
+        </footer>
+
     </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('calculator-form');
-            const sysTypeSelect = document.getElementById('sys-type');
-            const constantLabel = document.getElementById('constant-label');
-            const resultDisplay = document.getElementById('result-display');
-
-            // Actualizar etiqueta dinámicamente según el tipo de sistema seleccionado
-            sysTypeSelect.addEventListener('change', (e) => {
-                const val = e.target.value;
-                if (val === '0') constantLabel.textContent = 'Constante de Posición (Kp)';
-                else if (val === '1') constantLabel.textContent = 'Constante de Velocidad (Kv)';
-                else if (val === '2') constantLabel.textContent = 'Constante de Aceleración (Ka)';
-            });
-
-            // Manejar el evento de cálculo
-            form.addEventListener('submit', (e) => {
-                e.preventDefault(); // Evitar que la página recargue
-                
-                // Obtener valores
-                const sysType = sysTypeSelect.value;
-                const inputType = document.getElementById('input-type').value;
-                const A = parseFloat(document.getElementById('amplitude').value);
-                const K = parseFloat(document.getElementById('error-constant').value);
-                
-                let essValue = 0;
-                let isInfinity = false;
-                let formulaHTML = '';
-
-                if (inputType === 'step') {
-                    if (sysType === '0') {
-                        essValue = A / (1 + K);
-                        formulaHTML = `
-                            <div class="text-slate-300 mb-4 text-lg">
-                                e<sub>ss</sub> = 
-                                <div class="math-fraction">
-                                    <span class="math-numerator">A</span>
-                                    <span class="math-denominator">1 + K<sub>p</sub></span>
-                                </div>
-                                =
-                                <div class="math-fraction">
-                                    <span class="math-numerator">${A}</span>
-                                    <span class="math-denominator">1 + ${K}</span>
-                                </div>
-                            </div>`;
-                    } else if (sysType === '1' || sysType === '2') {
-                        essValue = 0;
-                        formulaHTML = `<div class="text-slate-300 mb-4 text-lg">e<sub>ss</sub> = 0</div>`;
-                    }
-                } 
-                else if (inputType === 'ramp') {
-                    if (sysType === '0') {
-                        isInfinity = true;
-                        formulaHTML = `<div class="text-slate-300 mb-4 text-lg">e<sub>ss</sub> = ∞</div>`;
-                    } else if (sysType === '1') {
-                        essValue = A / K;
-                        formulaHTML = `
-                            <div class="text-slate-300 mb-4 text-lg">
-                                e<sub>ss</sub> = 
-                                <div class="math-fraction">
-                                    <span class="math-numerator">A</span>
-                                    <span class="math-denominator">K<sub>v</sub></span>
-                                </div>
-                                =
-                                <div class="math-fraction">
-                                    <span class="math-numerator">${A}</span>
-                                    <span class="math-denominator">${K}</span>
-                                </div>
-                            </div>`;
-                    } else if (sysType === '2') {
-                        essValue = 0;
-                        formulaHTML = `<div class="text-slate-300 mb-4 text-lg">e<sub>ss</sub> = 0</div>`;
-                    }
-                }
-                else if (inputType === 'parabola') {
-                    if (sysType === '0' || sysType === '1') {
-                        isInfinity = true;
-                        formulaHTML = `<div class="text-slate-300 mb-4 text-lg">e<sub>ss</sub> = ∞</div>`;
-                    } else if (sysType === '2') {
-                        essValue = A / K;
-                        formulaHTML = `
-                            <div class="text-slate-300 mb-4 text-lg">
-                                e<sub>ss</sub> = 
-                                <div class="math-fraction">
-                                    <span class="math-numerator">A</span>
-                                    <span class="math-denominator">K<sub>a</sub></span>
-                                </div>
-                                =
-                                <div class="math-fraction">
-                                    <span class="math-numerator">${A}</span>
-                                    <span class="math-denominator">${K}</span>
-                                </div>
-                            </div>`;
-                    }
-                }
-
-                let finalDisplayValue = '';
-                if (isInfinity || !isFinite(essValue)) {
-                    finalDisplayValue = '∞';
-                } else {
-                    // Redondear a 4 decimales si tiene muchos, sino mostrar entero
-                    finalDisplayValue = Number.isInteger(essValue) ? essValue : essValue.toFixed(4);
-                }
-
-                resultDisplay.innerHTML = `
-                    ${formulaHTML}
-                    <div class="text-4xl font-bold text-emerald-400 mt-2">
-                        ${finalDisplayValue}
-                    </div>
-                `;
-            });
-        });
-    </script>
 </body>
 </html>
 ```

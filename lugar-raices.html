@@ -1,0 +1,417 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lugar Geométrico de las Raíces - Ingeniería</title>
+    
+    <!-- Cargando la fuente Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Cargando Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Cargando Plotly.js para gráficos matemáticos de alto nivel -->
+    <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+
+<body class="bg-slate-50 min-h-screen text-slate-800 antialiased py-8 px-4 sm:py-12 flex flex-col items-center">
+
+    <div class="max-w-6xl w-full mx-auto flex flex-col gap-8">
+        
+        <!-- Tarjeta de Introducción -->
+        <header class="bg-white p-8 md:p-10 rounded-2xl shadow-sm border-t-4 border-emerald-500">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"></path></svg>
+                </div>
+                <h1 class="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">
+                    Lugar Geométrico de las Raíces (LGR)
+                </h1>
+            </div>
+            <p class="text-slate-600 text-lg leading-relaxed">
+                Herramienta interactiva para calcular y graficar el movimiento de las raíces de un sistema de control a lazo cerrado a medida que varía su ganancia <strong class="text-emerald-600 font-semibold">K</strong>. Ingresá los polos y ceros a lazo abierto para visualizar la dinámica del sistema.
+            </p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Columna Izquierda: Formulario (Ocupa 4/12) -->
+            <div class="lg:col-span-4 flex flex-col gap-6">
+                <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100">
+                    <h2 class="text-xl font-bold text-slate-800 mb-6 border-b border-slate-100 pb-4">Función de Transferencia</h2>
+                    
+                    <form id="locus-form" class="space-y-6">
+                        
+                        <div class="space-y-3">
+                            <label class="block text-sm font-bold text-slate-700">
+                                Polos a lazo abierto
+                                <span class="block text-xs font-normal text-slate-500 mt-1">Separados por comas. Usá 'j' para complejos (Ej: 0, -2, -1+2j, -1-2j)</span>
+                            </label>
+                            <input type="text" id="input-poles" value="0, -2, -4" required
+                                class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block p-3 font-mono outline-none transition-all shadow-inner">
+                        </div>
+
+                        <div class="space-y-3">
+                            <label class="block text-sm font-bold text-slate-700">
+                                Ceros a lazo abierto
+                                <span class="block text-xs font-normal text-slate-500 mt-1">Separados por comas. Dejá vacío si no hay.</span>
+                            </label>
+                            <input type="text" id="input-zeros" value="-1"
+                                class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block p-3 font-mono outline-none transition-all shadow-inner">
+                        </div>
+
+                        <button type="submit" id="btn-calcular" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold rounded-lg text-sm px-5 py-4 transition-colors shadow-sm mt-4 flex justify-center items-center gap-2 group">
+                            <svg class="w-5 h-5 group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+                            Graficar LGR
+                        </button>
+                        
+                        <div id="error-msg" class="hidden bg-red-50 text-red-600 p-3 rounded-lg text-sm border border-red-200 mt-2"></div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Columna Derecha: Gráfico Plotly (Ocupa 8/12) -->
+            <div class="lg:col-span-8 flex flex-col min-h-[500px]">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-100 flex-grow p-2 md:p-4 overflow-hidden relative">
+                    <div id="plotly-div" class="w-full h-full min-h-[500px]"></div>
+                    
+                    <!-- Overlay de carga inicial -->
+                    <div id="loading-overlay" class="absolute inset-0 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center z-10 transition-opacity duration-300">
+                        <div class="w-12 h-12 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin mb-4"></div>
+                        <p class="text-slate-600 font-medium">Calculando trayectorias numéricas...</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. MOTOR MATEMÁTICO: NÚMEROS COMPLEJOS
+        // ==========================================
+        class Complex {
+            constructor(re, im = 0) {
+                this.re = re;
+                this.im = im;
+            }
+            add(other) { return new Complex(this.re + other.re, this.im + other.im); }
+            sub(other) { return new Complex(this.re - other.re, this.im - other.im); }
+            mul(other) { return new Complex(this.re * other.re - this.im * other.im, this.re * other.im + this.im * other.re); }
+            div(other) {
+                let denom = other.re * other.re + other.im * other.im;
+                return new Complex((this.re * other.re + this.im * other.im) / denom, (this.im * other.re - this.re * other.im) / denom);
+            }
+            abs() { return Math.sqrt(this.re * this.re + this.im * this.im); }
+            pow(n) {
+                let r = this.abs();
+                let theta = Math.atan2(this.im, this.re);
+                let r_n = Math.pow(r, n);
+                return new Complex(r_n * Math.cos(n * theta), r_n * Math.sin(n * theta));
+            }
+            toString() {
+                if (Math.abs(this.im) < 1e-10) return this.re.toFixed(4);
+                let sign = this.im >= 0 ? "+" : "";
+                return `${this.re.toFixed(4)}${sign}${this.im.toFixed(4)}j`;
+            }
+        }
+
+        const C_ZERO = new Complex(0, 0);
+        const C_ONE = new Complex(1, 0);
+
+        // ==========================================
+        // 2. ÁLGEBRA DE POLINOMIOS (Múltiples grados)
+        // Representados como arreglos de Complex: [a_n, a_{n-1}, ..., a_0]
+        // ==========================================
+        function polyAdd(p1, p2) {
+            let maxLen = Math.max(p1.length, p2.length);
+            let res = Array(maxLen).fill(C_ZERO);
+            for (let i = 0; i < p1.length; i++) res[maxLen - p1.length + i] = res[maxLen - p1.length + i].add(p1[i]);
+            for (let i = 0; i < p2.length; i++) res[maxLen - p2.length + i] = res[maxLen - p2.length + i].add(p2[i]);
+            return res;
+        }
+
+        function polyScale(p, scalar) {
+            return p.map(c => c.mul(scalar));
+        }
+
+        function polyMul(p1, p2) {
+            let res = Array(p1.length + p2.length - 1).fill(C_ZERO);
+            for (let i = 0; i < p1.length; i++) {
+                for (let j = 0; j < p2.length; j++) {
+                    res[i + j] = res[i + j].add(p1[i].mul(p2[j]));
+                }
+            }
+            return res;
+        }
+
+        // Convierte raíces [r1, r2...] en polinomio (s-r1)(s-r2)...
+        function rootsToPoly(roots) {
+            if (roots.length === 0) return [C_ONE];
+            let poly = [C_ONE];
+            for (let r of roots) {
+                let term = [C_ONE, r.mul(new Complex(-1, 0))]; // (s - r)
+                poly = polyMul(poly, term);
+            }
+            return poly;
+        }
+
+        function evaluatePoly(poly, x) {
+            let res = C_ZERO;
+            for (let i = 0; i < poly.length; i++) {
+                res = res.add(poly[i].mul(x.pow(poly.length - 1 - i)));
+            }
+            return res;
+        }
+
+        // ==========================================
+        // 3. BUSCADOR DE RAÍCES: MÉTODO DURAND-KERNER
+        // Encuentra todas las raíces simultáneamente
+        // ==========================================
+        function durandKerner(poly, iterations = 100) {
+            let degree = poly.length - 1;
+            if (degree <= 0) return [];
+            if (degree === 1) return [poly[1].mul(new Complex(-1, 0)).div(poly[0])]; // Ecuación lineal
+
+            // Normalizar dividiendo por el coeficiente principal
+            let p = poly.map(c => c.div(poly[0]));
+
+            // Semilla inicial (raíces de la unidad expandidas)
+            let roots = [];
+            let radius = 1.0;
+            let center = p[1].mul(new Complex(-1, 0)).div(new Complex(degree, 0)); // Aproximación centroide
+            
+            for(let i=1; i<=degree; i++) {
+                if(p[i].abs() > 0) radius = Math.max(radius, Math.pow(p[i].abs(), 1/i));
+            }
+            radius *= 1.5; // Margen de seguridad
+
+            for (let i = 0; i < degree; i++) {
+                let angle = (2 * Math.PI * i) / degree + 0.1; // Desfase para romper simetría perfecta
+                roots.push(new Complex(Math.cos(angle) * radius, Math.sin(angle) * radius).add(center));
+            }
+
+            // Iteraciones del método
+            for (let iter = 0; iter < iterations; iter++) {
+                let maxDiff = 0;
+                let nextRoots = [];
+                for (let i = 0; i < degree; i++) {
+                    let num = evaluatePoly(p, roots[i]);
+                    let den = C_ONE;
+                    for (let j = 0; j < degree; j++) {
+                        if (i !== j) den = den.mul(roots[i].sub(roots[j]));
+                    }
+                    if (den.abs() < 1e-15) break; // Evitar división por cero
+                    
+                    let diff = num.div(den);
+                    nextRoots.push(roots[i].sub(diff));
+                    maxDiff = Math.max(maxDiff, diff.abs());
+                }
+                roots = nextRoots;
+                if (maxDiff < 1e-6) break; // Convergencia alcanzada
+            }
+            return roots;
+        }
+
+        // ==========================================
+        // 4. LÓGICA DE CONTROL: GENERACIÓN DE LGR
+        // ==========================================
+        
+        // Parsear cadena a números complejos (ej: "-1+2j")
+        function parseComplex(str) {
+            str = str.replace(/\s+/g, '').replace(/i/g, 'j');
+            if (str === '') return null;
+            if (!str.includes('j')) return new Complex(parseFloat(str), 0);
+            
+            // Lógica simple de parseo para a+bj o a-bj
+            let imSign = str.includes('+') ? 1 : -1;
+            let parts = str.split(/[+-]/);
+            
+            if (str.startsWith('-')) {
+                parts.shift(); // remover el string vacío inicial
+                parts[0] = '-' + parts[0];
+                imSign = str.indexOf('-', 1) !== -1 ? -1 : 1;
+            }
+            
+            let re = parts.length > 1 ? parseFloat(parts[0]) : 0;
+            let imPart = parts.length > 1 ? parts[1] : parts[0];
+            imPart = imPart.replace('j', '');
+            let im = imPart === '' ? 1 : parseFloat(imPart);
+            
+            return new Complex(re, im * imSign);
+        }
+
+        function calculateRootLocus(polesStr, zerosStr) {
+            let poles = polesStr.split(',').map(parseComplex).filter(c => c !== null);
+            let zeros = zerosStr.split(',').map(parseComplex).filter(c => c !== null);
+
+            let polyD = rootsToPoly(poles); // D(s) = denominador
+            let polyN = rootsToPoly(zeros); // N(s) = numerador
+
+            let numRoots = poles.length;
+            if (zeros.length > poles.length) throw new Error("Sistemas impropios (más ceros que polos) no soportados.");
+
+            // Generar vector de ganancias K (Barrido híbrido lineal/logarítmico)
+            let K_vals = [];
+            for (let i = 0; i < 200; i++) K_vals.push(i * 0.05); // Alta resolución cerca de 0
+            for (let e = 1; e <= 4; e += 0.1) K_vals.push(Math.pow(10, e)); // Barrido logarítmico hasta inf
+
+            let branches = Array.from({length: numRoots}, () => []);
+            let previousRoots = poles.slice(); // Las trayectorias inician en los polos a lazo abierto
+
+            for (let K of K_vals) {
+                // Ecuación característica: D(s) + K * N(s) = 0
+                let K_C = new Complex(K, 0);
+                let scaledN = polyScale(polyN, K_C);
+                let P_s = polyAdd(polyD, scaledN);
+                
+                let currentRoots = durandKerner(P_s);
+                
+                // Algoritmo de "Nearest Neighbor" para trazar líneas continuas (Tracking)
+                let available = [...currentRoots];
+                let sortedRoots = [];
+                for (let prev of previousRoots) {
+                    let bestIdx = 0;
+                    let bestDist = Infinity;
+                    for (let i = 0; i < available.length; i++) {
+                        let dist = prev.sub(available[i]).abs();
+                        if (dist < bestDist) {
+                            bestDist = dist;
+                            bestIdx = i;
+                        }
+                    }
+                    if(available[bestIdx]) {
+                        sortedRoots.push(available[bestIdx]);
+                        available.splice(bestIdx, 1);
+                    }
+                }
+                
+                // Guardar coordenadas
+                for (let i = 0; i < sortedRoots.length; i++) {
+                    if (sortedRoots[i]) {
+                        branches[i].push(sortedRoots[i]);
+                    }
+                }
+                previousRoots = sortedRoots;
+            }
+
+            return { poles, zeros, branches };
+        }
+
+        // ==========================================
+        // 5. INTERFAZ Y RENDERIZADO PLOTLY
+        // ==========================================
+        const form = document.getElementById('locus-form');
+        const errorMsg = document.getElementById('error-msg');
+        const loadingOverlay = document.getElementById('loading-overlay');
+
+        function drawLocus(data) {
+            let traces = [];
+
+            // 1. Trazar Ramas (Líneas)
+            const colors = ['#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#06b6d4', '#eab308'];
+            data.branches.forEach((branch, idx) => {
+                let re = branch.map(c => c.re);
+                let im = branch.map(c => c.im);
+                traces.push({
+                    x: re,
+                    y: im,
+                    mode: 'lines',
+                    line: { width: 3, color: colors[idx % colors.length] },
+                    name: `Rama ${idx + 1}`,
+                    hoverinfo: 'x+y'
+                });
+            });
+
+            // 2. Trazar Polos (X Rojas)
+            traces.push({
+                x: data.poles.map(p => p.re),
+                y: data.poles.map(p => p.im),
+                mode: 'markers',
+                marker: { symbol: 'x', color: '#ef4444', size: 12, line: {width: 2} },
+                name: 'Polos (LA)',
+                type: 'scatter',
+                hoverinfo: 'text',
+                text: data.poles.map(p => `Polo: ${p.toString()}`)
+            });
+
+            // 3. Trazar Ceros (Círculos Azules)
+            if (data.zeros.length > 0) {
+                traces.push({
+                    x: data.zeros.map(z => z.re),
+                    y: data.zeros.map(z => z.im),
+                    mode: 'markers',
+                    marker: { symbol: 'circle-open', color: '#3b82f6', size: 10, line: {width: 2} },
+                    name: 'Ceros (LA)',
+                    type: 'scatter',
+                    hoverinfo: 'text',
+                    text: data.zeros.map(z => `Cero: ${z.toString()}`)
+                });
+            }
+
+            // Configuración del layout para el plano Complejo
+            const layout = {
+                margin: { t: 40, r: 20, l: 40, b: 40 },
+                xaxis: { 
+                    title: 'Eje Real (σ)', 
+                    zeroline: true, 
+                    zerolinecolor: '#94a3b8', 
+                    zerolinewidth: 2,
+                    gridcolor: '#e2e8f0'
+                },
+                yaxis: { 
+                    title: 'Eje Imaginario (jω)', 
+                    zeroline: true, 
+                    zerolinecolor: '#94a3b8', 
+                    zerolinewidth: 2,
+                    gridcolor: '#e2e8f0',
+                    scaleanchor: 'x', 
+                    scaleratio: 1 // Crucial para que el plano no se deforme
+                },
+                plot_bgcolor: 'white',
+                paper_bgcolor: 'transparent',
+                showlegend: true,
+                legend: { x: 1, y: 1, xanchor: 'right' }
+            };
+
+            Plotly.newPlot('plotly-div', traces, layout, {responsive: true});
+        }
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            errorMsg.classList.add('hidden');
+            loadingOverlay.classList.remove('opacity-0', 'pointer-events-none');
+
+            // Usamos setTimeout para permitir que el DOM renderice el loading state
+            setTimeout(() => {
+                try {
+                    const polesStr = document.getElementById('input-poles').value;
+                    const zerosStr = document.getElementById('input-zeros').value;
+                    
+                    const result = calculateRootLocus(polesStr, zerosStr);
+                    drawLocus(result);
+                } catch (err) {
+                    errorMsg.textContent = "Error matemático o de formato: " + err.message;
+                    errorMsg.classList.remove('hidden');
+                } finally {
+                    loadingOverlay.classList.add('opacity-0', 'pointer-events-none');
+                }
+            }, 50);
+        });
+
+        // Dibujar el gráfico por defecto al cargar la página
+        window.onload = () => {
+            document.getElementById('btn-calcular').click();
+        };
+    </script>
+</body>
+</html>
+```

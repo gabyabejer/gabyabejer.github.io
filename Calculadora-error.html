@@ -1,0 +1,262 @@
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Error en Estado Estable</title>
+    
+    <!-- Cargando fuente Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Cargando Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        
+        /* Clases auxiliares para crear fracciones matemáticas visualmente */
+        .math-fraction {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            vertical-align: middle;
+            margin: 0 0.25rem;
+        }
+        .math-numerator {
+            border-bottom: 2px solid currentColor;
+            padding: 0 0.25rem;
+            line-height: 1.2;
+        }
+        .math-denominator {
+            padding: 0 0.25rem;
+            line-height: 1.2;
+        }
+    </style>
+</head>
+
+<body class="bg-slate-50 min-h-screen text-slate-800 antialiased py-8 px-4 sm:py-12 flex flex-col items-center">
+
+    <div class="max-w-4xl w-full mx-auto flex flex-col gap-8">
+        
+        <!-- Tarjeta de Introducción -->
+        <header class="bg-white p-8 md:p-10 rounded-2xl shadow-sm border-t-4 border-emerald-500">
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-lg flex items-center justify-center">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                </div>
+                <h1 class="text-2xl md:text-3xl font-bold text-slate-900 tracking-tight">
+                    Calculadora de Error en Estado Estable
+                </h1>
+            </div>
+            
+            <p class="text-slate-600 text-lg leading-relaxed">
+                El <strong>error en estado estable (e<sub>ss</sub>)</strong> es la diferencia entre la entrada y la salida de un sistema de control cuando el tiempo tiende a infinito. Su valor depende del <em>tipo de sistema</em> (cantidad de integradores o polos en el origen) y de la <em>señal de entrada</em> aplicada (escalón, rampa o parábola).
+            </p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Columna Izquierda: Formulario (Ocupa 7/12 en desktop) -->
+            <div class="lg:col-span-7 flex flex-col gap-6">
+                <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-100">
+                    <h2 class="text-xl font-bold text-slate-800 mb-6 border-b border-slate-100 pb-4">Parámetros del Sistema</h2>
+                    
+                    <form id="calculator-form" class="space-y-6">
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Tipo de Sistema -->
+                            <div class="space-y-2">
+                                <label class="block text-sm font-semibold text-slate-700">Tipo de Sistema</label>
+                                <select id="sys-type" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block p-3 transition-colors outline-none cursor-pointer">
+                                    <option value="0">Tipo 0 (Sin integradores)</option>
+                                    <option value="1">Tipo 1 (1 polo en el origen)</option>
+                                    <option value="2">Tipo 2 (2 polos en el origen)</option>
+                                </select>
+                            </div>
+
+                            <!-- Tipo de Entrada -->
+                            <div class="space-y-2">
+                                <label class="block text-sm font-semibold text-slate-700">Señal de Entrada (R(s))</label>
+                                <select id="input-type" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block p-3 transition-colors outline-none cursor-pointer">
+                                    <option value="step">Escalón (A/s)</option>
+                                    <option value="ramp">Rampa (A/s²)</option>
+                                    <option value="parabola">Parábola (A/s³)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Amplitud -->
+                            <div class="space-y-2">
+                                <label class="block text-sm font-semibold text-slate-700">Amplitud de Entrada (A)</label>
+                                <input type="number" id="amplitude" value="1" step="any" required
+                                    class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block p-3 transition-colors outline-none">
+                            </div>
+
+                            <!-- Constante de Error (Dinámica) -->
+                            <div class="space-y-2">
+                                <label id="constant-label" class="block text-sm font-semibold text-slate-700">Constante de Posición (Kp)</label>
+                                <input type="number" id="error-constant" value="10" step="any" required
+                                    class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-500 block p-3 transition-colors outline-none">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold rounded-lg text-sm px-5 py-4 transition-colors shadow-sm mt-4 flex justify-center items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                            Calcular Error (e<sub>ss</sub>)
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="lg:col-span-5 flex flex-col gap-6">
+                
+                <!-- Tarjeta de Resultado Dinámico -->
+                <div class="bg-slate-900 rounded-2xl shadow-sm border border-slate-800 text-white p-6 md:p-8 flex flex-col justify-center min-h-[250px] relative overflow-hidden">
+                    <!-- Patrón de fondo sutil decorativo -->
+                    <div class="absolute inset-0 opacity-10" style="background-image: radial-gradient(#10b981 1px, transparent 1px); background-size: 16px 16px;"></div>
+                    
+                    <div class="relative z-10 flex flex-col items-center text-center w-full">
+                        <h3 class="text-slate-400 font-medium text-sm tracking-widest uppercase mb-6">Resultado del Análisis</h3>
+                        
+                        <div id="result-display" class="w-full">
+                            <p class="text-slate-300 italic mb-2">Ingresá los valores y presioná calcular.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-emerald-50 rounded-xl p-6 border border-emerald-100">
+                    <h4 class="text-sm font-bold text-emerald-800 uppercase tracking-wide mb-3 flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        Referencia Rápida
+                    </h4>
+                    <ul class="text-sm text-emerald-700 space-y-2">
+                        <li><strong>Tipo 0:</strong> Finito para Escalón (K<sub>p</sub>). Infinito para Rampa y Parábola.</li>
+                        <li><strong>Tipo 1:</strong> Cero para Escalón. Finito para Rampa (K<sub>v</sub>). Infinito para Parábola.</li>
+                        <li><strong>Tipo 2:</strong> Cero para Escalón y Rampa. Finito para Parábola (K<sub>a</sub>).</li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('calculator-form');
+            const sysTypeSelect = document.getElementById('sys-type');
+            const constantLabel = document.getElementById('constant-label');
+            const resultDisplay = document.getElementById('result-display');
+
+            // Actualizar etiqueta dinámicamente según el tipo de sistema seleccionado
+            sysTypeSelect.addEventListener('change', (e) => {
+                const val = e.target.value;
+                if (val === '0') constantLabel.textContent = 'Constante de Posición (Kp)';
+                else if (val === '1') constantLabel.textContent = 'Constante de Velocidad (Kv)';
+                else if (val === '2') constantLabel.textContent = 'Constante de Aceleración (Ka)';
+            });
+
+            // Manejar el evento de cálculo
+            form.addEventListener('submit', (e) => {
+                e.preventDefault(); // Evitar que la página recargue
+                
+                // Obtener valores
+                const sysType = sysTypeSelect.value;
+                const inputType = document.getElementById('input-type').value;
+                const A = parseFloat(document.getElementById('amplitude').value);
+                const K = parseFloat(document.getElementById('error-constant').value);
+                
+                let essValue = 0;
+                let isInfinity = false;
+                let formulaHTML = '';
+
+                if (inputType === 'step') {
+                    if (sysType === '0') {
+                        essValue = A / (1 + K);
+                        formulaHTML = `
+                            <div class="text-slate-300 mb-4 text-lg">
+                                e<sub>ss</sub> = 
+                                <div class="math-fraction">
+                                    <span class="math-numerator">A</span>
+                                    <span class="math-denominator">1 + K<sub>p</sub></span>
+                                </div>
+                                =
+                                <div class="math-fraction">
+                                    <span class="math-numerator">${A}</span>
+                                    <span class="math-denominator">1 + ${K}</span>
+                                </div>
+                            </div>`;
+                    } else if (sysType === '1' || sysType === '2') {
+                        essValue = 0;
+                        formulaHTML = `<div class="text-slate-300 mb-4 text-lg">e<sub>ss</sub> = 0</div>`;
+                    }
+                } 
+                else if (inputType === 'ramp') {
+                    if (sysType === '0') {
+                        isInfinity = true;
+                        formulaHTML = `<div class="text-slate-300 mb-4 text-lg">e<sub>ss</sub> = ∞</div>`;
+                    } else if (sysType === '1') {
+                        essValue = A / K;
+                        formulaHTML = `
+                            <div class="text-slate-300 mb-4 text-lg">
+                                e<sub>ss</sub> = 
+                                <div class="math-fraction">
+                                    <span class="math-numerator">A</span>
+                                    <span class="math-denominator">K<sub>v</sub></span>
+                                </div>
+                                =
+                                <div class="math-fraction">
+                                    <span class="math-numerator">${A}</span>
+                                    <span class="math-denominator">${K}</span>
+                                </div>
+                            </div>`;
+                    } else if (sysType === '2') {
+                        essValue = 0;
+                        formulaHTML = `<div class="text-slate-300 mb-4 text-lg">e<sub>ss</sub> = 0</div>`;
+                    }
+                }
+                else if (inputType === 'parabola') {
+                    if (sysType === '0' || sysType === '1') {
+                        isInfinity = true;
+                        formulaHTML = `<div class="text-slate-300 mb-4 text-lg">e<sub>ss</sub> = ∞</div>`;
+                    } else if (sysType === '2') {
+                        essValue = A / K;
+                        formulaHTML = `
+                            <div class="text-slate-300 mb-4 text-lg">
+                                e<sub>ss</sub> = 
+                                <div class="math-fraction">
+                                    <span class="math-numerator">A</span>
+                                    <span class="math-denominator">K<sub>a</sub></span>
+                                </div>
+                                =
+                                <div class="math-fraction">
+                                    <span class="math-numerator">${A}</span>
+                                    <span class="math-denominator">${K}</span>
+                                </div>
+                            </div>`;
+                    }
+                }
+
+                let finalDisplayValue = '';
+                if (isInfinity || !isFinite(essValue)) {
+                    finalDisplayValue = '∞';
+                } else {
+                    // Redondear a 4 decimales si tiene muchos, sino mostrar entero
+                    finalDisplayValue = Number.isInteger(essValue) ? essValue : essValue.toFixed(4);
+                }
+
+                resultDisplay.innerHTML = `
+                    ${formulaHTML}
+                    <div class="text-4xl font-bold text-emerald-400 mt-2">
+                        ${finalDisplayValue}
+                    </div>
+                `;
+            });
+        });
+    </script>
+</body>
+</html>
+```

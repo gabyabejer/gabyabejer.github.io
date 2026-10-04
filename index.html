@@ -10,13 +10,19 @@
     body { font-family: 'Inter', sans-serif; }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col items-center py-12 px-4">
+<!-- Acá cambiamos el fondo por un degradado de gris muy claro a un verde esmeralda muy sutil -->
+<body class="bg-gradient-to-br from-slate-200 via-slate-50 to-emerald-100 text-slate-800 antialiased min-h-screen flex flex-col items-center py-12 px-4">
 
   <!-- Encabezado / Perfil -->
-  <header class="max-w-3xl w-full bg-white rounded-2xl shadow-sm border border-slate-100 p-8 mb-8 text-center border-t-4 border-t-emerald-500">
+  <header class="max-w-3xl w-full bg-white/90 backdrop-blur-sm rounded-2xl shadow-sm border border-slate-100 p-8 mb-8 text-center border-t-4 border-t-emerald-500">
+    
     <div class="inline-flex items-center justify-center px-3 py-1 rounded-full bg-emerald-50 text-emerald-600 text-sm font-semibold mb-6">
       🚀 Portfolio Activo
     </div>
+
+    <!-- IMAGEN DE PERFIL: Por ahora carga tus iniciales. Luego podés cambiar el link por "perfil.jpg" -->
+    <img src="https://ui-avatars.com/api/?name=Gabriel+Abejer&background=10b981&color=fff&size=150" alt="Foto de Gabriel Abejer" class="w-32 h-32 rounded-full mx-auto mb-4 border-4 border-white shadow-md object-cover">
+
     <h1 class="text-4xl font-bold text-slate-900 mb-3">Gabriel Abejer</h1>
     <h2 class="text-xl text-slate-600 font-medium mb-4">Estudiante avanzado de Ingeniería Electrónica</h2>
     <p class="text-slate-500 max-w-xl mx-auto leading-relaxed mb-6">
@@ -35,9 +41,8 @@
         Contacto
       </a>
       
-      <!-- BOTÓN DE CV: Pegá tu link de Drive acá abajo -->
-      <a href="
-          https://drive.google.com/file/d/1jgfkvKjRXuRikjSZww3XUi9tg9Hehuai/view?usp=drivesdk" target="_blank" class="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition shadow-sm font-medium">
+      <!-- ACORDATE DE VOLVER A PEGAR TU LINK DE DRIVE ACÁ: -->
+      <a href="PEGÁ_TU_LINK_DE_DRIVE_ACÁ" target="_blank" class="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition shadow-sm font-medium">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
         Descargar CV
       </a>
